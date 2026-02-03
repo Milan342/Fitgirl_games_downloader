@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitGirl Downloader</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Navigation Bar -->
+      <nav class="navbar">
+        <div class="nav-brand">
+          <h1>🎮 FitGirl Download</h1>
+        </div>
+        <div class="nav-menu">
+          <button class="nav-btn active" onclick="showPage('input')">
+            📝 Input URLs
+          </button>
+          <button
+            class="nav-btn"
+            onclick="showPage('progress')"
+            id="progressNavBtn"
+            disabled
+          >
+            ⚡ Processing
+          </button>
+          <button
+            class="nav-btn"
+            onclick="showPage('results')"
+            id="resultsNavBtn"
+            disabled
+          >
+            🎯 Results
+          </button>
+          <button
+            class="nav-btn"
+            onclick="showPage('autoopen')"
+            id="autoopenNavBtn"
+            disabled
+          >
+            🚀 Auto-Open
+          </button>
+        </div>
+      </nav>
+
+      <!-- Page 1: Input URLs -->
+      <div class="page active" id="inputPage">
+        <div class="content">
+          <h2 style="color: #3b9797; margin-bottom: 30px; text-align: center">
+            📝 Enter Your FitGirl URLs
+          </h2>
+          <form id="linkForm">
+            <div class="form-group">
+              <label for="links">Paste FitGirl URLs (one per line):</label>
+              <textarea
+                id="links"
+                name="links"
+                placeholder="https://fitgirl-repacks.site/example-game/&#10;https://fitgirl-repacks.site/another-game/&#10;..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="file">Or upload a text file with URLs:</label>
+              <input type="file" id="file" name="file" accept=".txt" />
+            </div>
+
+            <div class="button-group">
+              <button type="submit" class="btn-primary">
+                🚀 Start Processing
+              </button>
+              <button type="button" class="btn-secondary" onclick="clearForm()">
+                🗑️ Clear
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Page 2: Processing Progress -->
+      <div class="page" id="progressPage">
+        <div class="content">
+          <h2 style="color: #3b9797; margin-bottom: 30px; text-align: center">
+            ⚡ Processing Your Links
+          </h2>
+          <div class="progress-container" style="display: block">
+            <div class="progress-text" id="progressText">Starting...</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="log-container" id="logContainer"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page 3: Results -->
+      <div class="page" id="resultsPage">
+        <div class="content">
+          <h2 style="margin-bottom: 30px; text-align: center">
+            🎯 Extraction Results
+          </h2>
+          <div class="results-container" style="display: block">
+            <div class="results-summary">
+              <div class="summary-item">
+                <div class="summary-number success" id="successCount">0</div>
+                <div>Successful</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-number error" id="errorCount">0</div>
+                <div>Failed</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-number total" id="totalCount">0</div>
+                <div>Total</div>
+              </div>
+            </div>
+
+            <div class="results-list" id="resultsList"></div>
+            <div class="button-group" style="margin-top: 20px">
+              <button class="btn-primary" onclick="downloadResults()">
+                📥 Download All Links as TXT
+              </button>
+              <button
+                class="btn-primary"
+                onclick="
+                  showPage('autoopen');
+                  enableNavigation('autoopen');
+                "
+              >
+                🚀 Go to Auto-Open
+              </button>
+              <button class="btn-secondary" onclick="startNewSession()">
+                🔄 Start New Session
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page 4: Auto-Open -->
+      <div class="page" id="autoopenPage">
+        <div class="content">
+          <h2 style="margin-bottom: 30px; text-align: center">
+            🚀 Auto-Open Links
+          </h2>
+          <div class="autoopen-container" style="display: block">
+            <!-- Auto-Open Timer Controls -->
+            <div class="timer-controls" id="timerControls">
+              <h4>🔗 Auto-Open Settings</h4>
+              <div class="timer-group">
+                <label class="timer-label" for="delaySlider"
+                  >Delay between links:</label
+                >
+                <input
+                  type="range"
+                  id="delaySlider"
+                  min="30"
+                  max="200"
+                  value="60"
+                  step="5"
+                />
+                <span class="timer-value"
+                  ><span id="delayValue">60</span> seconds</span
+                >
+              </div>
+
+              <div class="auto-open-controls">
+                <button id="startAutoOpenBtn" class="btn btn-success">
+                  🚀 Start Auto-Open
+                </button>
+                <button
+                  id="pauseAutoOpenBtn"
+                  class="btn btn-warning"
+                  style="display: none"
+                >
+                  ⏸️ Pause
+                </button>
+                <button
+                  id="stopAutoOpenBtn"
+                  class="btn btn-danger"
+                  style="display: none"
+                >
+                  ⏹️ Stop
+                </button>
+              </div>
+
+              <div
+                class="auto-open-status"
+                id="autoOpenStatus"
+                style="display: none"
+              >
+                <div>
+                  Status: <span id="statusText">Waiting to start...</span>
+                </div>
+                <div>Progress: <span id="linkProgress">0 / 0</span></div>
+                <div>
+                  Next link in:
+                  <span id="countdown" class="countdown">--</span> seconds
+                </div>
+                <div class="current-link">
+                  Current: <span id="currentLinkText">None</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="button-group" style="margin-top: 20px">
+              <button class="btn-secondary" onclick="showPage('results')">
+                ← Back to Results
+              </button>
+              <button class="btn-secondary" onclick="startNewSession()">
+                🔄 Start New Session
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
