@@ -6,7 +6,6 @@ Traditionally, torrent-based downloads are the most common method for handling l
 
 The focus of the project is on **automation, speed, and usability**. With a clean and visually appealing website, users can submit multiple links at once, track progress in real time, and download all extracted files without manual effort. The tool handles everything behind the scenes, turning a repetitive and time-consuming task into a smooth, one-click workflow.
 
----
 
 ## Key Highlights
 
@@ -16,16 +15,12 @@ The focus of the project is on **automation, speed, and usability**. With a clea
 -  Live progress tracking, logs, and result summaries  
  
 
----
-
-
 ## Tech Stack
 
 - **Frontend:** HTML, CSS, JavaScript  
 - **Backend:** Python (Flask)  
 - **Core Concepts:** Automation, web scraping, background processing, UI/UX design  
 
----
 
 ## Disclaimer
 
