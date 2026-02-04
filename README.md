@@ -36,3 +36,13 @@ This project is created for **educational and technical demonstration purposes o
 2. Start the web application:
     ```bash
     python web_app.py
+
+## How to use
+    1. Select any games you want in the official website
+    ![alt text](image.png)
+    2. choose fuckingfast option
+  ![alt text](image-1.png)
+    3. Copy and paste all these link in the input box and then click 'Start Processing'.
+    4. Links will be scrapped. Scroll and 'click Go to Auto Open'.
+    5. Assume all the files will be equal to 500mb. Select the delay between download accordingly.
+    6. click Start Auto-Open. 
